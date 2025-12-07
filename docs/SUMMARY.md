@@ -1,18 +1,18 @@
 # Summary
 
 - [Overview](overview.md)
-- [Why Chance Exists](why-chance.md)
-- [Product & MVP](product-mvp.md)
-- [Architecture (Chance L2)](architecture.md)
-  - [Oracle Layer](architecture.md#oracle-layer)
-  - [Market Layer](architecture.md#market-layer)
-  - [Settlement Layer](architecture.md#settlement-layer)
-  - [Reflexivity](architecture.md#reflexivity)
-- [Governance](governance.md)
-- [Application Layer (Native Suite)](application-layer.md)
-- [Ecosystem & Incentives](ecosystem.md)
-- [Use Cases](use-cases.md)
-- [Future Vision](future-vision.md)
+- [What Chance Is](what-chance-is.md)
+- [The Problem](problem.md)
+- [The Chance Model](chance-model.md)
+  - [PredictionHub](predictionhub.md)
+  - [Stake-to-Create](stake-to-create.md)
+  - [Protocol Fees](protocol-fees.md)
+  - [Resolvers & Automation](resolvers.md)
+  - [Canonical DeFi Stack](defi-stack.md)
+- [Resolution Flows](resolution-flows.md)
+- [Tech Stack](tech-stack.md)
+- [Economics](economics.md)
+- [Future Vision](future.md)
 
 
 

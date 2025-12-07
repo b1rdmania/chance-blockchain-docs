@@ -1,23 +1,24 @@
-# Overview
+Chance Blockchain
 
-Chance is an Ethereum Layer 2 purpose-built for prediction, probabilistic finance, and AI-oracle settlement.
+The prediction-native OP Superchain rollup.
 
-It offers:
+Markets run cleanly when truth sits at the base layer.
 
-- **AI-powered oracles** that forecast future events
-- **Prediction markets** embedded at the chain level
-- **Event-driven settlement** secured by Ethereum
-- **A native DeFi suite** built to use probability as a primitive
+Chance is an Ethereum L2 with:
 
-Chance exists because forecasting, risk, and governance need a transparent, fast, and low-cost execution environment.
+a built-in resolution engine
 
-Ethereum provides security. Chance provides purpose.
+a stake-to-create model
 
-The result:
+resolver modules
 
-Data → Probability → Markets → Settlement → Fees → Stakers
+a canonical DeFi stack
 
-Chance is the first L2 where the base layer understands time, uncertainty, and events.
+Prediction is not an application.
+It is part of the chain.
+
+Chance turns resolution into public infrastructure.
+
 
 
 
