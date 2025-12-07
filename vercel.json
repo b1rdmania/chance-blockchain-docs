@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "name": "chance-landing",
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
+
+
+
+
+

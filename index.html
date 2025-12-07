@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chance — Prediction-Native Blockchain</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f5f3;
+            --gray: #6b6b6b;
+            --gray-light: #e0e0de;
+            --serif: 'Instrument Serif', Georgia, serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--white);
+            color: var(--black);
+            font-family: var(--mono);
+            font-weight: 400;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        /* Noise overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.025;
+            z-index: 1000;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-family: var(--serif);
+            font-size: 1.25rem;
+            letter-spacing: -0.02em;
+            color: var(--white);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--white);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.5;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 3rem 4rem;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 4rem;
+            left: 3rem;
+            right: 3rem;
+            height: 1px;
+            background: var(--black);
+            opacity: 0.15;
+        }
+
+        .eyebrow {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            animation: fadeUp 0.8s ease both;
+        }
+
+        .headline {
+            font-family: var(--serif);
+            font-size: clamp(3rem, 8vw, 7rem);
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            max-width: 14ch;
+            margin-bottom: 3rem;
+            animation: fadeUp 0.8s ease 0.1s both;
+        }
+
+        .subheadline {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            max-width: 48ch;
+            color: var(--gray);
+            margin-bottom: 4rem;
+            animation: fadeUp 0.8s ease 0.2s both;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--black);
+            text-decoration: none;
+            padding: 1.25rem 2.5rem;
+            border: 1px solid var(--black);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeUp 0.8s ease 0.3s both;
+        }
+
+        .cta-button:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .cta-button::after {
+            content: '→';
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* Sections */
+        section {
+            padding: 8rem 3rem;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
+            max-width: 1400px;
+        }
+
+        .section-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--gray);
+            position: sticky;
+            top: 8rem;
+            height: fit-content;
+        }
+
+        .section-number {
+            display: block;
+            font-family: var(--serif);
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-content h2 {
+            font-family: var(--serif);
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+            max-width: 18ch;
+        }
+
+        .section-content p {
+            font-size: 0.9rem;
+            line-height: 1.9;
+            color: var(--gray);
+            max-width: 55ch;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Problem list */
+        .problem-list {
+            margin-top: 2rem;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .problem-list li {
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: var(--black);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .problem-list li::before {
+            content: '×';
+            font-family: var(--serif);
+            font-size: 1.25rem;
+            line-height: 1.4;
+            opacity: 0.3;
+        }
+
+        /* Feature blocks */
+        .feature-blocks {
+            display: grid;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .feature-block {
+            padding: 2.5rem;
+            background: rgba(0,0,0,0.02);
+            border-left: 2px solid var(--black);
+        }
+
+        .feature-block h3 {
+            font-family: var(--serif);
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .feature-block p {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0;
+        }
+
+        /* Stack list */
+        .stack-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            margin-top: 3rem;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .stack-item {
+            padding: 1.5rem;
+            font-size: 0.8rem;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            transition: background 0.3s ease;
+        }
+
+        .stack-item:hover {
+            background: rgba(0,0,0,0.03);
+        }
+
+        .stack-item:nth-child(3n) {
+            border-right: none;
+        }
+
+        .stack-item:nth-last-child(-n+3) {
+            border-bottom: none;
+        }
+
+        .stack-item span {
+            display: block;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+
+        /* Resolution types */
+        .resolution-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .resolution-type {
+            padding: 2rem 0;
+            border-top: 2px solid var(--black);
+        }
+
+        .resolution-type h4 {
+            font-family: var(--serif);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .resolution-type p {
+            font-size: 0.8rem;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* Economics */
+        .economics-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem 3rem;
+            margin-top: 2rem;
+        }
+
+        .economics-item {
+            font-size: 0.85rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .economics-item::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--black);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Expandable tech details */
+        .tech-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--gray);
+            cursor: pointer;
+            margin-top: 1.25rem;
+            padding: 0.5rem 0;
+            border: none;
+            background: none;
+            transition: color 0.3s ease;
+        }
+
+        .tech-toggle:hover {
+            color: var(--black);
+        }
+
+        .tech-toggle::before {
+            content: '+';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border: 1px solid currentColor;
+            font-size: 0.75rem;
+            font-family: var(--mono);
+            transition: all 0.3s ease;
+        }
+
+        .tech-toggle.open::before {
+            content: '−';
+            background: var(--black);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
+        .tech-details {
+            max-height: 0;
+            overflow: hidden;
+            transition:
+                max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.4s ease,
+                margin 0.4s ease;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .tech-details.open {
+            max-height: 600px;
+            opacity: 1;
+            margin-top: 1.25rem;
+        }
+
+        .tech-details-inner {
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.03);
+            border-left: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .tech-details code {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.06);
+            padding: 0.15rem 0.4rem;
+            border-radius: 2px;
+        }
+
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tech-list li {
+            font-size: 0.8rem;
+            line-height: 1.7;
+            color: var(--gray);
+            padding: 0.35rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .tech-list li::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            color: var(--black);
+            opacity: 0.4;
+        }
+
+        .tech-list li strong {
+            color: var(--black);
+            font-weight: 500;
+        }
+
+        .tech-sublist {
+            margin-left: 1rem;
+            margin-top: 0.25rem;
+        }
+
+        .tech-sublist li {
+            font-size: 0.75rem;
+            padding: 0.2rem 0;
+        }
+
+        /* Purpose section */
+        .purpose {
+            background: var(--black);
+            color: var(--white);
+            text-align: center;
+            padding: 12rem 3rem;
+        }
+
+        .purpose .section-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .purpose h2 {
+            font-family: var(--serif);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            margin-bottom: 2rem;
+            max-width: none;
+        }
+
+        .purpose p {
+            color: rgba(255,255,255,0.6);
+            max-width: 50ch;
+            margin: 0 auto 3rem;
+        }
+
+        .purpose .cta-button {
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        .purpose .cta-button:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray);
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .section-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .section-label {
+                position: static;
+            }
+
+            .stack-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stack-item:nth-child(3n) {
+                border-right: 1px solid rgba(0,0,0,0.1);
+            }
+
+            .stack-item:nth-child(2n) {
+                border-right: none;
+            }
+
+            .resolution-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .economics-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero,
+            section {
+                padding: 6rem 1.5rem;
+            }
+
+            .purpose {
+                padding: 8rem 1.5rem;
+            }
+
+            .stack-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stack-item {
+                border-right: none !important;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Chance</div>
+        <div class="nav-links">
+            <a href="#what">Protocol</a>
+            <a href="#model">Model</a>
+            <a href="#stack">Stack</a>
+            <a href="#purpose">Purpose</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <p class="eyebrow">A prediction-native OP Superchain rollup</p>
+        <h1 class="headline">Markets run cleanly when truth sits at the base layer.</h1>
+        <p class="subheadline">
+            Chance is a Layer 2 with a built-in resolution engine, a stake-to-create system, and a native stack of DeFi tools. Prediction is not an application here. It is part of the chain.
+        </p>
+        <a href="#what" class="cta-button">Explore Chance</a>
+    </section>
+
+    <section id="what">
+        <div class="section-grid reveal">
+            <div class="section-label">
+                <span class="section-number">01</span>
+                What Chance Is
+            </div>
+            <div class="section-content">
+                <h2>A canonical engine for resolving markets.</h2>
+                <p>Chance is an OP-based rollup with one core primitive: a chain-level system for resolving prediction markets.</p>
+                <p>
+                    Builders stake collateral to create markets. Resolvers stake to publish outcomes. Stakers earn a share of fees. The chain collects protocol revenue from all prediction
+                    activity.
+                </p>
+                <p>Chance ships with its own DeFi stack to support prediction flow.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="problem">
+        <div class="section-grid reveal">
+            <div class="section-label">
+                <span class="section-number">02</span>
+                The Problem
+            </div>
+            <div class="section-content">
+                <h2>Why prediction markets break.</h2>
+                <ul class="problem-list">
+                    <li>Resolution is unclear or centralised</li>
+                    <li>Anyone can publish junk markets</li>
+                    <li>Each project builds its own oracle, dispute flow, and settlement logic</li>
+                </ul>
+                <p style="margin-top: 2rem;">Liquidity scatters. Users lose trust. Builders waste time.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="model">
+        <div class="section-grid reveal">
+            <div class="section-label">
+                <span class="section-number">03</span>
+                The Chance Model
+            </div>
+            <div class="section-content">
+                <h2>Resolution at the chain level.</h2>
+                <div class="feature-blocks">
+                    <div class="feature-block">
+                        <h3>PredictionHub</h3>
+                        <p>A chain-level system for resolving markets. Stores outcomes. Handles disputes. Routes protocol fees.</p>
+                        <button class="tech-toggle" onclick="toggleTech(this)">Technical View</button>
+                        <div class="tech-details">
+                            <div class="tech-details-inner">
+                                <ul class="tech-list">
+                                    <li>Single canonical contract: <code>PredictionHub.sol</code></li>
+                                    <li>Markets register with resolver modules via standard interface</li>
+                                    <li>Outcomes stored as final, immutable events</li>
+                                    <li>Automated resolution for price feeds via Pyth/Redstone adapters</li>
+                                    <li>Template resolvers for sports, crypto, macro, news</li>
+                                    <li>Optimistic dispute model with bonds and escalation paths</li>
+                                    <li>Canonical indexing surface for all builders</li>
+                                    <li><code>FeeRouter</code> triggered on resolution</li>
+                                    <li>Everything on-chain and verifiable</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-block">
+                        <h3>Stake-to-Create</h3>
+                        <p>Builders post collateral to create markets or categories. Spam becomes costly. Misbehaviour is slashed.</p>
+                        <button class="tech-toggle" onclick="toggleTech(this)">Technical View</button>
+                        <div class="tech-details">
+                            <div class="tech-details-inner">
+                                <ul class="tech-list">
+                                    <li><code>MarketStake.sol</code> manages builder stakes</li>
+                                    <li>Stakes can be ETH, stETH, or LSTs</li>
+                                    <li>Single stake can back many markets</li>
+                                    <li>
+                                        <strong>Slashing rules:</strong>
+                                        <ul class="tech-sublist">
+                                            <li>False outcomes</li>
+                                            <li>Abandoned markets</li>
+                                            <li>Broken resolvers</li>
+                                            <li>Misconfigured oracle parameters</li>
+                                        </ul>
+                                    </li>
+                                    <li>Stake returned on correct resolution and clean history</li>
+                                    <li>Slashed stake auto-routed to stakers and treasury</li>
+                                    <li>Creates a real cost to low-quality markets</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-block">
+                        <h3>Protocol Fees</h3>
+                        <p>Every resolved market pays the chain. Fees flow to stakers, resolvers, builders, and treasury.</p>
+                        <button class="tech-toggle" onclick="toggleTech(this)">Technical View</button>
+                        <div class="tech-details">
+                            <div class="tech-details-inner">
+                                <ul class="tech-list">
+                                    <li><code>FeeRouter.sol</code> directs resolution fees</li>
+                                    <li>Triggered on <code>PredictionHub.finalizeOutcome()</code></li>
+                                    <li>Fee split configurable by governance (with timelocks)</li>
+                                    <li>
+                                        <strong>Default split:</strong>
+                                        <ul class="tech-sublist">
+                                            <li>StakerVault (ETH yield for stakers)</li>
+                                            <li>Resolver operator reward</li>
+                                            <li>Builder rebate</li>
+                                            <li>Treasury for grants + infra</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <strong>Fee sources:</strong>
+                                        <ul class="tech-sublist">
+                                            <li>AMM trading</li>
+                                            <li>Market creation</li>
+                                            <li>Resolution calls</li>
+                                            <li>Liquidations (later)</li>
+                                            <li>Slashed stakes</li>
+                                        </ul>
+                                    </li>
+                                    <li>Fully on-chain. No off-chain accounting.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-block">
+                        <h3>Resolvers & Automation</h3>
+                        <p>Pluggable resolver modules with keeper infrastructure for automated market settlement.</p>
+                        <button class="tech-toggle" onclick="toggleTech(this)">Technical View</button>
+                        <div class="tech-details">
+                            <div class="tech-details-inner">
+                                <ul class="tech-list">
+                                    <li>Pluggable resolver modules implementing <code>IResolver</code></li>
+                                    <li>Operators stake to register resolver modules</li>
+                                    <li>Keepers run resolution bots</li>
+                                    <li>Automated price-based resolution via Pyth / Redstone</li>
+                                    <li>Batch settlement support for high-volume events</li>
+                                    <li>All resolver logic stored via <code>ResolverRegistry.sol</code></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-block">
+                        <h3>Canonical DeFi Stack</h3>
+                        <p>Native financial primitives designed around prediction market flows and liquidity.</p>
+                        <button class="tech-toggle" onclick="toggleTech(this)">Technical View</button>
+                        <div class="tech-details">
+                            <div class="tech-details-inner">
+                                <ul class="tech-list">
+                                    <li>Binary & scalar AMMs built on CPMM/LMSR</li>
+                                    <li>Auto-payout integrated with PredictionHub</li>
+                                    <li>DEX base layer (v2/v3)</li>
+                                    <li>LP vaults for prediction markets</li>
+                                    <li>Keeper automation for liquidity maintenance</li>
+                                    <li>Indexer schema for all market and AMM events</li>
+                                    <li>Extensible SDK for custom market creators</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="defi">
+        <div class="section-grid reveal">
+            <div class="section-label">
+                <span class="section-number">04</span>
+                Native DeFi Stack
+            </div>
+            <div class="section-content">
+                <h2>Built-in primitives for prediction flow.</h2>
+                <p>Chance grants focus on prediction volume and new market designs.</p>
+                <div class="stack-grid">
+                    <div class="stack-item">Prediction AMM<span>Default</span></div>
+                    <div class="stack-item">Base DEX<span>Trading</span></div>
+                    <div class="stack-item">LP Vaults<span>Liquidity</span></div>
+                    <div class="stack-item">Builder Templates<span>Development</span></div>
+                    <div class="stack-item">Keeper Support<span>Automation</span></div>
+                    <div class="stack-item">Market Metadata<span>Standardised</span></div>
+                    <div class="stack-item">Market Index<span>Canonical</span></div>
+                    <div class="stack-item">Canonical UI<span>Interface</span></div>
+                    <div class="stack-item">Subgraph<span>Indexing</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="resolution">
+        <div class="section-grid reveal">
+            <div class="section-label">
+                <span class="section-number">05</span>
+                Resolution System
+            </div>
+            <div class="section-content">
+                <h2>Three resolution paths. One source of truth.</h2>
+                <p>Resolvers post stake. Good resolvers earn fees. Poor resolvers are slashed.</p>
+                <div class="resolution-grid">
+                    <div class="resolution-type">
+                        <h4>Automated</h4>
+                        <p>Price-based markets resolve through Pyth, Redstone, or adapters. Keepers trigger settlement.</p>
+                    </div>
+                    <div class="resolution-type">
+                        <h4>Template</h4>
+                        <p>Sports, politics, macro, and news markets use shared resolvers. Operators handle updates.</p>
+                    </div>
+                    <div class="resolution-type">
+                        <h4>Quirky</h4>
+                        <p>Optimistic proposals with dispute windows. Escalation only when challenged.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="stack">
+        <div class="section-grid reveal">
+            <div class="section-label">
+                <span class="section-number">06</span>
+                Tech Stack
+            </div>
+            <div class="section-content">
+                <h2>Infrastructure for prediction markets.</h2>
+                <div class="stack-grid">
+                    <div class="stack-item">OP Stack<span>Rollup</span></div>
+                    <div class="stack-item">Ethereum<span>Settlement</span></div>
+                    <div class="stack-item">EigenDA / Blobs<span>Data Availability</span></div>
+                    <div class="stack-item">ETH<span>Gas Token</span></div>
+                    <div class="stack-item">Pyth / Redstone<span>Price Feeds</span></div>
+                    <div class="stack-item">Graph / Goldsky<span>Indexer</span></div>
+                    <div class="stack-item">Keepers<span>Automation</span></div>
+                    <div class="stack-item">Modular Resolvers<span>Contracts</span></div>
+                    <div class="stack-item">Fee Router<span>Distribution</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="economics">
+        <div class="section-grid reveal">
+            <div class="section-label">
+                <span class="section-number">07</span>
+                Economics
+            </div>
+            <div class="section-content">
+                <h2>Sustainable protocol revenue.</h2>
+                <p>Low infrastructure cost. Lean team. Token optional and later.</p>
+                <div class="economics-list">
+                    <div class="economics-item">Resolution fees</div>
+                    <div class="economics-item">Slashed builder stake</div>
+                    <div class="economics-item">AMM swap fees</div>
+                    <div class="economics-item">DeFi activity</div>
+                    <div class="economics-item">MEV capture</div>
+                    <div class="economics-item">Ecosystem grants</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="purpose" class="purpose">
+        <div class="section-content reveal">
+            <h2>A rollup built for information markets.</h2>
+            <p>A simple base layer with clear rules and aligned incentives. A chain where truth and resolution sit at the core.</p>
+            <a href="mailto:hello@chance.xyz" class="cta-button">Get in Touch</a>
+        </div>
+    </section>
+
+    <footer>
+        <div>© 2025 Chance</div>
+        <div>A prediction-native rollup</div>
+    </footer>
+
+    <script>
+        // Toggle tech details
+        function toggleTech(button) {
+            const details = button.nextElementSibling;
+            button.classList.toggle('open');
+            details.classList.toggle('open');
+        }
+
+        // Reveal on scroll
+        const reveals = document.querySelectorAll('.reveal');
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            },
+            {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px',
+            }
+        );
+
+        reveals.forEach((el) => observer.observe(el));
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href || href === '#') return;
+                const target = document.querySelector(href);
+                if (!target) return;
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
