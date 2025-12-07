@@ -3,6 +3,7 @@
 - [Overview](overview.md)
 - [What Chance Is](what-chance-is.md)
 - [The Problem](problem.md)
+- [Why Ethereum](why-ethereum.md)
 - [The Chance Model](chance-model.md)
   - [PredictionHub](predictionhub.md)
   - [Stake-to-Create](stake-to-create.md)
