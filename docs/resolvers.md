@@ -1,48 +1,41 @@
-Resolvers & Automation
+# Resolvers & Automation
 
 Modular settlement for every type of market.
 
-Resolver modules plug into PredictionHub via a clean interface.
+Resolver modules plug into `PredictionHub` via a clean interface.
 
 Operators stake to register resolvers.
 
 Resolvers can be:
 
-Automated
+## Automated
 
 For price-based markets:
 
-Pyth
-
-Redstone
-
-Chainlink adapters
-
-Custom feeds
+- Pyth
+- Redstone
+- Chainlink adapters
+- Custom feeds
 
 Keepers trigger settlement.
 
-Template
+## Template
 
 For sports, politics, macro events:
 
-shared resolver logic
+- shared resolver logic
+- operator updates
+- dispute paths available
 
-operator updates
-
-dispute paths available
-
-Quirky
+## Quirky
 
 Optimistic-mode:
 
-anyone can propose an outcome
+- anyone can propose an outcome
+- dispute window applies
+- escalates only when challenged
 
-dispute window applies
-
-escalates only when challenged
-
-ResolverRegistry.sol holds all resolver modules.
+`ResolverRegistry.sol` holds all resolver modules.
 
 This allows safe extensibility without fragmentation.
 

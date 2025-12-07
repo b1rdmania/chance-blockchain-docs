@@ -1,4 +1,4 @@
-Future Vision
+# Future Vision
 
 A rollup built for information markets.
 
@@ -11,17 +11,12 @@ The chain stays simple.
 
 Chance is a rollup built for:
 
-truth
-
-clarity
-
-clean incentives
-
-shared liquidity
-
-predictable settlement
-
-permissionless experimentation
+- truth
+- clarity
+- clean incentives
+- shared liquidity
+- predictable settlement
+- permissionless experimentation
 
 It is a chain where information has a price and outcomes matter.
 
