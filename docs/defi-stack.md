@@ -1,22 +1,29 @@
 # Canonical DeFi Stack
 
-Built-in primitives for prediction flow.
+Simple base primitives. The rest is for builders.
 
-Chance ships with a native financial stack tuned for prediction markets.
+Chance does not try to own the DeFi surface.
+
+It ships a small set of stable, boring primitives so other teams can build real products without reinventing the plumbing.
 
 ## Included components
 
-- Binary & scalar AMMs (CPMM / LMSR)
-- Auto-payout integrated with `PredictionHub`
-- Base DEX (v2/v3 routing)
-- LP vaults for prediction liquidity
-- Keeper automation for liquidity and rollover
-- SDK for builders
-- Canonical indexing schema
-- Standardised metadata for all markets
-- Canonical market index and UI templates
+- Simple AMMs for spot and basic binary/scalar markets
+- Auto-payout hooks wired into `PredictionHub`
+- A minimal DEX router (v2/v3 style routing)
+- Optional LP helpers for prediction market pairs
+- Keeper hooks for rebalancing and rollover
+- A clean SDK for reading markets and outcomes
+- A standard indexing schema for all market and resolution events
+- Standardised metadata for markets so UIs can render them consistently
 
-This ensures any new prediction protocol has deep tools from day one.
+These are base-layer tools, not a full suite.
+
+Chance keeps its grants and incentives focused on new prediction primitives, novel market structures, and UX, not on clones of DEXes or lending markets.
+
+The chain handles the foundations.
+
+Builders own the experiences.
 
 
 
